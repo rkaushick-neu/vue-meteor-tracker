@@ -1,31 +1,19 @@
 import { Meteor } from 'meteor/meteor'
-import { LinksCollection } from '/imports/api/links'
+import { TasksCollection } from '../imports/api/taskCollection';
+import '../imports/api/tasksPublication';
 
-async function insertLink({ title, url }) {
-  await LinksCollection.insertAsync({ title, url, createdAt: new Date() })
-}
+const insertTask = async text => await TasksCollection.insertAsync({text});
 
 Meteor.startup(async () => {
-  // If the Links collection is empty, add some data.
-  if ((await LinksCollection.find().countAsync()) === 0) {
-    await insertLink({
-      title: 'Do the Tutorial',
-      url: 'https://vuejs.org/guide/quick-start.html',
-    })
-
-    await insertLink({
-      title: 'Follow the Guide',
-      url: 'https://guide.meteor.com',
-    })
-
-    await insertLink({
-      title: 'Read the Docs',
-      url: 'https://docs.meteor.com',
-    })
-
-    await insertLink({
-      title: 'Discussions',
-      url: 'https://forums.meteor.com',
-    })
+  const taskCount = await TasksCollection.find().countAsync();
+  if (taskCount === 0){
+    await insertTask('First Task');
+    await insertTask('Second Task');
+    await insertTask('Third Task');
+    await insertTask('Fourth Task');
+    await insertTask('Fifth Task');
+    await insertTask('Sixth Task');
+    await insertTask('Seventh Task');
+    await insertTask('Eighth Task');
   }
-})
+});
