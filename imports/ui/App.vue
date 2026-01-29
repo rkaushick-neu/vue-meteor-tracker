@@ -1,10 +1,13 @@
 <script setup>
 import Task from './components/Task.vue';
+import TaskForm from './components/TaskForm.vue';
 import { subscribe, autorun } from 'vue-meteor-tracker';
 import { TasksCollection } from '../api/taskCollection';
 
 subscribe('tasks');
-const tasks = autorun(() => TasksCollection.find({}).fetch()).result;
+const tasks = autorun(() => {
+  return TasksCollection.find({}, {sort: {createdAt: -1}}).fetch();
+}).result;
 </script>
 
 <template>
@@ -12,6 +15,7 @@ const tasks = autorun(() => TasksCollection.find({}).fetch()).result;
     <header>
       <h1 class="text-4xl font-bold text-gray-800 my-4"">Todo List</h1>
     </header>
+    <TaskForm />
     <ul class="list-disc list-inside p-4">
       <Task v-for="task of tasks" :key="task._id" :task="task" />
     </ul>
